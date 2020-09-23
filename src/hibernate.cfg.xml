@@ -50,7 +50,7 @@ Contributor(s):
     <property name="hibernate.id.new_generator_mappings">false</property>
     
     <!--mapeamentos-->
-    
+    <mapping class = "br.ulbra.model.Categoria"></mapping>
     
   </session-factory>
 </hibernate-configuration>

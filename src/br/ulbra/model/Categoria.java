@@ -30,10 +30,11 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(Integer id_categoria, String descricao) {
+    public Categoria(String descricao) {
         this.id_categoria = id_categoria;
         this.descricao = descricao;
     }
+
 
     public Integer getId_categoria() {
         return id_categoria;

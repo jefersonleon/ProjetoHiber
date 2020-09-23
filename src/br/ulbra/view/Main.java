@@ -5,8 +5,7 @@
  */
 package br.ulbra.view;
 
-import br.ulbra.conection.HibernateUtil;
-import org.hibernate.Session;
+
 
 /**
  *
@@ -21,7 +20,12 @@ public class Main {
 //        System.out.println(resultado);
 //        session.getTransaction().commit();
 //        session.close();
-System.out.println("'");
+//        System.out.println("Salvando o Cliente");
+//        CategoriaController categoriaController = new CategoriaController();
+//        Categoria categoria = new Categoria("Xurumelas");
+//        int idCategoria = categoriaController.salvarCategoria(categoria);
+//        System.out.println("Categoria id:"+idCategoria);
+        new FrmCategoria(null, true).setVisible(true);
         
     }
     
