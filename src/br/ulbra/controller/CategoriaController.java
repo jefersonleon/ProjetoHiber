@@ -15,17 +15,33 @@ import java.util.List;
  */
 public class CategoriaController {
 
-    private final CategoriaDAO categoriaDAO = new CategoriaDAO();
+    private final CategoriaDAO CategoriaDAO = new CategoriaDAO();
 
-    public int salvarCategoria(Categoria pcategoria) {
-        return this.categoriaDAO.salvarCategoriaDAO(pcategoria);
+    public int salvarCategoriaController(Categoria pCategoria) {
+
+        Categoria filmeExistente = this.getFilmeController(pCategoria.getId_categoria());
+
+        if (filmeExistente == null) {
+            return this.CategoriaDAO.salvarCategoriaDAO(pCategoria);
+        } else {
+            if (this.CategoriaDAO.atualizarCategoriaDAO(pCategoria)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
     }
 
-    public List<Categoria> getTodosClientesController() {
-        return this.categoriaDAO.getTodosClientesDAO();
+    public List<Categoria> getTodosCategoriaController() {
+        return this.CategoriaDAO.getTodosCategoriasDAO();
     }
 
-    public boolean deleteController(Categoria pCategoria) {
-        return this.categoriaDAO.deleteCategoriaDAO(pCategoria);
+    public boolean deleteCategoriaController(Categoria pCategoria) {
+        return this.CategoriaDAO.deleteCategoriaDAO(pCategoria);
     }
+
+    public Categoria getFilmeController(int idCategoria) {
+        return this.CategoriaDAO.getCategoriaDAO(idCategoria);
+    }
+
 }

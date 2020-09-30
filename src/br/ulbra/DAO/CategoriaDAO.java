@@ -24,13 +24,16 @@ public class CategoriaDAO {
 
     public int salvarCategoriaDAO(Categoria pcategoria) {
         Session session = null;
-        Integer id_categoriaInserida = 0;
+        Integer idFilmeInserido = 0;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
         try {
+
             session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
-            id_categoriaInserida = (Integer) session.save(pcategoria);
+            idFilmeInserido = (Integer) session.save(pcategoria);
             transaction.commit();
+
         } catch (HibernateException e) {
             e.printStackTrace();
         } finally {
@@ -38,10 +41,33 @@ public class CategoriaDAO {
                 session.close();
             }
         }
-        return id_categoriaInserida;
+
+        return idFilmeInserido;
     }
 
-    public List<Categoria> getTodosClientesDAO() {
+    public boolean atualizarCategoriaDAO(Categoria pcategoria) {
+        Session session = null;
+
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
+        try {
+            session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            session.update(pcategoria);
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+            return false;
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return true;
+    }
+
+    public List<Categoria> getTodosCategoriasDAO() {
         List<Categoria> listaCategorias = null;
         Session session = null;
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
@@ -49,8 +75,11 @@ public class CategoriaDAO {
 
             session = sessionFactory.openSession();
             CriteriaBuilder builder = session.getCriteriaBuilder();
-            CriteriaQuery<Categoria> criteriaQuery = builder.createQuery(Categoria.class);
-            criteriaQuery.from(Categoria.class);
+            CriteriaQuery<Categoria> criteriaQuery = builder.createQuery(Categoria.class
+            );
+            criteriaQuery
+                    .from(Categoria.class
+                    );
             listaCategorias = session.createQuery(criteriaQuery).getResultList();
 
         } catch (HibernateException e) {
@@ -73,18 +102,44 @@ public class CategoriaDAO {
 
             session = sessionFactory.openSession();
             Transaction transaction = session.beginTransaction();
+
             session.delete(pCategoria);
+
             transaction.commit();
 
         } catch (HibernateException e) {
-            JOptionPane.showMessageDialog(null, e.getMessage());
-            //e.printStackTrace();
+            JOptionPane.showMessageDialog(null,e.getMessage());
             return false;
         } finally {
             if (session != null) {
                 session.close();
             }
         }
+
         return true;
+    }
+
+    public Categoria getCategoriaDAO(int idCategoria) {
+        Categoria categoria = null;
+        Session session = null;
+        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+
+        try {
+            session = sessionFactory.openSession();
+            Transaction transaction = session.beginTransaction();
+            categoria
+                    = (Categoria) session.get(Categoria.class,
+                             idCategoria);
+            transaction.commit();
+
+        } catch (HibernateException e) {
+            JOptionPane.showMessageDialog(null, e.getMessage());
+
+        } finally {
+            if (session != null) {
+                session.close();
+            }
+        }
+        return categoria;
     }
 }

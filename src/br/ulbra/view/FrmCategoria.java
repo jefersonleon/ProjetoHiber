@@ -27,7 +27,7 @@ public class FrmCategoria extends javax.swing.JDialog {
         this.setLocationRelativeTo(null);
         CategoriaController categoriaController = new CategoriaController();
         List<Categoria> listaCategoria = new ArrayList();
-        listaCategoria = categoriaController.getTodosClientesController();
+        listaCategoria = categoriaController.getTodosCategoriaController();
         this.popularTabelaCategoria(listaCategoria);
     }
 
@@ -64,10 +64,13 @@ public class FrmCategoria extends javax.swing.JDialog {
         jScrollPane1 = new javax.swing.JScrollPane();
         JtableCategoria = new javax.swing.JTable();
         btnExcluir = new javax.swing.JButton();
+        btEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
         jLabel1.setText("Código");
+
+        txtCod.setEditable(false);
 
         jLabel2.setText("Descrição");
 
@@ -98,6 +101,13 @@ public class FrmCategoria extends javax.swing.JDialog {
             }
         });
 
+        btEditar.setText("Editar");
+        btEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btEditarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -107,21 +117,21 @@ public class FrmCategoria extends javax.swing.JDialog {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(26, 26, 26)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel1)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(jLabel2)
+                            .addComponent(jLabel1))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtCod, javax.swing.GroupLayout.PREFERRED_SIZE, 47, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtDescricao, javax.swing.GroupLayout.PREFERRED_SIZE, 273, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(53, 53, 53)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(btnSalvar)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(btnExcluir))
+                                .addComponent(btnExcluir)
+                                .addGap(18, 18, 18)
+                                .addComponent(btEditar))
                             .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 327, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap(72, Short.MAX_VALUE))
         );
@@ -141,7 +151,8 @@ public class FrmCategoria extends javax.swing.JDialog {
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnSalvar)
-                    .addComponent(btnExcluir))
+                    .addComponent(btnExcluir)
+                    .addComponent(btEditar))
                 .addContainerGap(80, Short.MAX_VALUE))
         );
 
@@ -149,54 +160,88 @@ public class FrmCategoria extends javax.swing.JDialog {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        CategoriaController categoriaController = new CategoriaController();
-        Categoria categoria = this.getDadosInterface();
-        int idCategorigaSalvo = categoriaController.salvarCategoria(categoria);
-        if (idCategorigaSalvo>0){
+        CategoriaController filmeController = new CategoriaController();
 
-        DefaultTableModel modeloTabela = (DefaultTableModel) this.JtableCategoria.getModel();
-        modeloTabela.addRow(
-                new Object[]{
-                    idCategorigaSalvo,
-                    categoria.getDescricao()
-                });
-         JOptionPane.showMessageDialog(null, "Categoria salva com sucesso!");
-        }else{
-            JOptionPane.showMessageDialog(null, "Erro ao salvar Categoria!");
+        Categoria categoria = this.getDadosInterface();
+
+        int idCategoriaSalvo = filmeController.salvarCategoriaController(categoria);
+
+        if (idCategoriaSalvo > 0) {
+            this.resetForm();
+            List<Categoria> listaDeCategoria = filmeController.getTodosCategoriaController();
+
+            this.popularTabelaCategoria(listaDeCategoria);
+
+            JOptionPane.showMessageDialog(this, "Categoria salvo com sucesso!");
+        } else {
+            //erro ao salvar o filme
+            JOptionPane.showMessageDialog(this, "Erro ao salvar Categoria");
         }
 
+      
     }//GEN-LAST:event_btnSalvarActionPerformed
+    private void resetForm() {
+        this.txtCod.setText(null);
+        this.txtDescricao.setText(null);
 
+    }
     private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
-       DefaultTableModel  modelo = (DefaultTableModel) this.JtableCategoria.getModel();
-       int linha = this.JtableCategoria.getSelectedRow();
-       
-       int idCategoria = Integer.parseInt(String.valueOf(modelo.getValueAt(linha,0)));
-       //JOptionPane.showMessageDialog(null, idCategoria);
-   
-       CategoriaController categoriaController = new CategoriaController();
-       Categoria categoria = new Categoria();
-       categoria.setId_categoria(idCategoria);
-       boolean resultado = categoriaController.deleteController(categoria);
-       if(resultado){
-           modelo.removeRow(linha);
-           JOptionPane.showMessageDialog(null, "Cliente Excluido com Sucesso!!");
-       }else{
-            JOptionPane.showMessageDialog(null, "Erro ao  Excluir Categoria!!");
-       }
-       
-       
-       
-       
-       
-       
+         DefaultTableModel modeloTabelaCategoria = (DefaultTableModel) this.JtableCategoria.getModel();
+
+        int linha = this.JtableCategoria.getSelectedRow();
+        /* JOptionPane.showMessageDialog(null, linha);*/
+       int idCategoria = Integer.parseInt(String.valueOf(modeloTabelaCategoria.getValueAt(linha, 0)));
+
+        CategoriaController categoriaController = new CategoriaController();
+
+        Categoria categoria = new Categoria();
+        categoria.setId_categoria(idCategoria);
+
+        boolean resultado = categoriaController.deleteCategoriaController(categoria);
+        ;
+        if (resultado == true) {
+            modeloTabelaCategoria.removeRow(linha);
+
+            JOptionPane.showMessageDialog(this, "Categoria Excluida com sucesso");
+        } else {
+            JOptionPane.showMessageDialog(this, "Erro ao excluir categoria");
+        }
+
+
     }//GEN-LAST:event_btnExcluirActionPerformed
 
-    private Categoria getDadosInterface() {
-        Categoria cat = new Categoria();
-        cat.setDescricao(txtDescricao.getText());
+    private void btEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btEditarActionPerformed
+        Categoria categoria = new Categoria();
+        CategoriaController categoriaController = new CategoriaController();
+        DefaultTableModel modeloTabelaCategoria = (DefaultTableModel) this.JtableCategoria.getModel();
+        int linha = this.JtableCategoria.getSelectedRow();
+        categoria.setId_categoria(Integer.parseInt(String.valueOf(modeloTabelaCategoria.getValueAt(linha, 0))));
+        categoria.setDescricao(String.valueOf(modeloTabelaCategoria.getValueAt(linha, 1)));
 
-        return cat;
+        this.setDadosInterface(categoria);
+
+
+    }//GEN-LAST:event_btEditarActionPerformed
+
+    private void setDadosInterface(Categoria categoria) {
+        this.txtCod.setText(String.valueOf(categoria.getId_categoria()));
+        this.txtDescricao.setText(categoria.getDescricao());
+    }
+
+    private Categoria getDadosInterface() {
+      Categoria categoria = new Categoria();
+
+        categoria.setId_categoria(0);
+        if (this.txtCod.getText() != null) {
+            if (!this.txtCod.getText().isEmpty()) {
+                categoria.setId_categoria(Integer.parseInt(this.txtCod.getText()));
+            }
+        }
+
+        categoria.setDescricao(this.txtDescricao.getText());
+        
+
+        return categoria;
 
     }
 
@@ -245,6 +290,7 @@ public class FrmCategoria extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable JtableCategoria;
+    private javax.swing.JButton btEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JLabel jLabel1;
